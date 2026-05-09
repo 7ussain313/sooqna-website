@@ -1,0 +1,835 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>SooQna — Your Smart Marketplace</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --navy:#0A1628;--navy2:#0D1F3C;--navy3:#112244;--navy4:#1a2e55;
+  --lime:#B9E55F;--lime2:#a8d452;--teal:#42A391;--teal2:#2d8a7a;
+  --blue:#1a5fc8;--blue2:#2471e8;
+  --text:#e8edf5;--text2:#9aaccc;--text3:#6b82a8;
+  --card:#131f38;--card2:#162038;--border:rgba(255,255,255,0.08);
+  --radius:14px;--radius2:20px;
+}
+html{scroll-behavior:smooth;}
+body{background:var(--navy);color:var(--text);font-family:'Segoe UI',system-ui,sans-serif;line-height:1.6;overflow-x:hidden;}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:0 5%;background:rgba(10,22,40,0.85);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;height:68px;}
+.logo{display:flex;align-items:center;gap:10px;font-size:22px;font-weight:700;color:#fff;text-decoration:none;}
+.logo-badge{background:linear-gradient(135deg,var(--lime),var(--teal));color:#0a1628;font-size:13px;font-weight:800;padding:4px 10px;border-radius:8px;letter-spacing:0.5px;}
+.nav-links{display:flex;gap:32px;list-style:none;}
+.nav-links a{color:var(--text2);text-decoration:none;font-size:15px;transition:color .2s;}
+.nav-links a:hover{color:var(--lime);}
+.nav-cta{background:linear-gradient(135deg,var(--lime),var(--teal));color:#0a1628;padding:9px 22px;border-radius:10px;font-weight:700;font-size:14px;text-decoration:none;transition:opacity .2s;}
+.nav-cta:hover{opacity:.85;}
+.hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:4px;}
+.hamburger span{width:24px;height:2px;background:var(--text);border-radius:2px;transition:.3s;}
+.mobile-menu{display:none;position:fixed;top:68px;left:0;right:0;background:rgba(10,22,40,0.98);padding:24px 5%;flex-direction:column;gap:20px;z-index:99;border-bottom:1px solid var(--border);}
+.mobile-menu a{color:var(--text);text-decoration:none;font-size:17px;}
+.mobile-menu.open{display:flex;}
+
+/* HERO */
+#home{min-height:100vh;display:flex;align-items:center;padding:100px 5% 60px;background:radial-gradient(ellipse at 20% 50%,rgba(66,163,145,0.15) 0%,transparent 60%),radial-gradient(ellipse at 80% 20%,rgba(185,229,95,0.1) 0%,transparent 50%),var(--navy);}
+.hero-inner{max-width:1200px;margin:auto;width:100%;display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center;}
+.hero-tag{display:inline-flex;align-items:center;gap:8px;background:rgba(185,229,95,0.12);border:1px solid rgba(185,229,95,0.3);color:var(--lime);padding:6px 16px;border-radius:30px;font-size:13px;font-weight:600;margin-bottom:24px;}
+.hero-tag::before{content:'';width:8px;height:8px;background:var(--lime);border-radius:50%;animation:pulse 2s infinite;}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1);}50%{opacity:.5;transform:scale(1.4);}}
+h1{font-size:clamp(36px,5vw,58px);font-weight:800;line-height:1.15;margin-bottom:20px;color:#fff;}
+h1 span{background:linear-gradient(135deg,var(--lime),var(--teal));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.hero-sub{font-size:18px;color:var(--text2);margin-bottom:36px;max-width:480px;}
+.hero-btns{display:flex;gap:16px;flex-wrap:wrap;}
+.btn-primary{background:linear-gradient(135deg,var(--lime),var(--teal));color:#0a1628;padding:14px 30px;border-radius:12px;font-weight:700;font-size:15px;text-decoration:none;display:inline-flex;align-items:center;gap:8px;transition:transform .2s,opacity .2s;}
+.btn-primary:hover{transform:translateY(-2px);opacity:.9;}
+.btn-outline{border:1.5px solid rgba(255,255,255,0.2);color:#fff;padding:14px 30px;border-radius:12px;font-weight:600;font-size:15px;text-decoration:none;transition:border-color .2s,background .2s;}
+.btn-outline:hover{border-color:var(--lime);background:rgba(185,229,95,0.08);}
+.hero-stats{display:flex;gap:32px;margin-top:48px;}
+.stat-item{text-align:center;}
+.stat-num{font-size:28px;font-weight:800;color:#fff;}
+.stat-num span{color:var(--lime);}
+.stat-label{font-size:13px;color:var(--text3);}
+.hero-phones{position:relative;display:flex;justify-content:center;align-items:center;height:500px;}
+.phone-frame{width:230px;background:linear-gradient(145deg,#1a2e55,#0d1a30);border-radius:36px;border:2px solid rgba(255,255,255,0.12);overflow:hidden;box-shadow:0 30px 80px rgba(0,0,0,0.5),0 0 0 1px rgba(255,255,255,0.05);position:relative;}
+.phone-frame.main{width:240px;z-index:3;transform:translateY(20px);}
+.phone-frame.side{width:210px;position:absolute;opacity:.7;}
+.phone-frame.side.left{left:-20px;transform:rotate(-8deg) translateY(10px);z-index:2;}
+.phone-frame.side.right{right:-20px;transform:rotate(8deg) translateY(10px);z-index:2;}
+.phone-screen{background:linear-gradient(180deg,#0d1a30 0%,#0a1628 100%);padding:16px;}
+.phone-topbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;}
+.phone-logo{background:linear-gradient(135deg,var(--lime),var(--teal));color:#0a1628;font-weight:800;font-size:11px;padding:4px 8px;border-radius:6px;}
+.phone-bell{width:24px;height:24px;background:rgba(185,229,95,0.15);border-radius:50%;display:flex;align-items:center;justify-content:center;}
+.phone-search{background:rgba(255,255,255,0.06);border-radius:10px;padding:8px 12px;font-size:11px;color:var(--text3);margin-bottom:10px;display:flex;align-items:center;gap:6px;}
+.phone-banner{background:linear-gradient(135deg,#1a3a6a,#2a4a8a);border-radius:10px;height:80px;margin-bottom:10px;display:flex;align-items:center;justify-content:center;overflow:hidden;position:relative;}
+.phone-banner-text{color:rgba(255,255,255,0.6);font-size:10px;text-align:center;}
+.phone-cats{display:flex;gap:6px;margin-bottom:10px;overflow:hidden;}
+.cat-pill{background:rgba(185,229,95,0.15);border:1px solid rgba(185,229,95,0.3);color:var(--lime);font-size:9px;padding:4px 8px;border-radius:20px;white-space:nowrap;}
+.cat-pill.active{background:var(--lime);color:#0a1628;}
+.phone-products{display:grid;grid-template-columns:1fr 1fr;gap:6px;}
+.phone-product-card{background:rgba(255,255,255,0.05);border-radius:8px;overflow:hidden;}
+.phone-product-img{height:52px;background:linear-gradient(135deg,#1e3560,#2a4580);display:flex;align-items:center;justify-content:center;font-size:20px;}
+.phone-product-info{padding:5px;}
+.phone-product-name{font-size:8px;color:var(--text2);margin-bottom:2px;}
+.phone-product-price{font-size:9px;font-weight:700;color:var(--lime);}
+.phone-navbar{display:flex;justify-content:space-around;padding:10px 0;margin-top:6px;border-top:1px solid var(--border);}
+.phone-nav-icon{width:28px;height:28px;display:flex;align-items:center;justify-content:center;border-radius:50%;}
+.phone-nav-icon.active{background:var(--lime);}
+
+/* SECTIONS */
+section{padding:90px 5%;}
+.section-inner{max-width:1200px;margin:auto;}
+.section-tag{display:inline-block;background:rgba(185,229,95,0.1);border:1px solid rgba(185,229,95,0.25);color:var(--lime);padding:5px 14px;border-radius:20px;font-size:12px;font-weight:600;letter-spacing:1px;text-transform:uppercase;margin-bottom:16px;}
+h2{font-size:clamp(28px,4vw,44px);font-weight:800;color:#fff;margin-bottom:16px;line-height:1.2;}
+h2 span{background:linear-gradient(135deg,var(--lime),var(--teal));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.section-sub{font-size:17px;color:var(--text2);max-width:560px;margin-bottom:56px;}
+
+/* ABOUT */
+#about{background:linear-gradient(180deg,var(--navy) 0%,#0d1f3c 100%);}
+.about-grid{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center;}
+.about-content h2{margin-bottom:20px;}
+.about-text{font-size:16px;color:var(--text2);margin-bottom:16px;}
+.about-highlights{display:flex;flex-direction:column;gap:14px;margin-top:28px;}
+.highlight-item{display:flex;align-items:flex-start;gap:14px;padding:16px;background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:12px;}
+.highlight-icon{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
+.highlight-icon.green{background:rgba(185,229,95,0.15);color:var(--lime);}
+.highlight-icon.teal{background:rgba(66,163,145,0.15);color:var(--teal);}
+.highlight-icon.blue{background:rgba(26,95,200,0.15);color:var(--blue2);}
+.highlight-text h4{font-size:14px;font-weight:700;color:#fff;margin-bottom:4px;}
+.highlight-text p{font-size:13px;color:var(--text2);}
+.about-visual{display:flex;flex-direction:column;gap:16px;}
+.about-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius2);padding:24px;}
+.about-card-header{display:flex;align-items:center;gap:12px;margin-bottom:16px;}
+.about-card-icon{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px;}
+.about-card-icon.lime{background:rgba(185,229,95,0.2);}
+.about-card-icon.teal{background:rgba(66,163,145,0.2);}
+.about-card-title{font-size:16px;font-weight:700;color:#fff;}
+.about-card-sub{font-size:13px;color:var(--text2);}
+.stats-row{display:flex;gap:16px;}
+.mini-stat{flex:1;background:rgba(255,255,255,0.04);border-radius:10px;padding:14px;text-align:center;}
+.mini-stat-num{font-size:22px;font-weight:800;color:var(--lime);}
+.mini-stat-label{font-size:12px;color:var(--text3);}
+.tech-stack{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px;}
+.tech-badge{background:rgba(255,255,255,0.06);border:1px solid var(--border);color:var(--text2);font-size:12px;padding:5px 12px;border-radius:20px;}
+
+/* FEATURES */
+#features{background:var(--navy);}
+.features-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:24px;}
+.feature-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius2);padding:28px;transition:transform .3s,border-color .3s;}
+.feature-card:hover{transform:translateY(-6px);border-color:rgba(185,229,95,0.3);}
+.feature-icon{width:54px;height:54px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:26px;margin-bottom:20px;}
+.feature-icon.f1{background:linear-gradient(135deg,rgba(185,229,95,0.2),rgba(185,229,95,0.05));}
+.feature-icon.f2{background:linear-gradient(135deg,rgba(66,163,145,0.2),rgba(66,163,145,0.05));}
+.feature-icon.f3{background:linear-gradient(135deg,rgba(26,95,200,0.2),rgba(26,95,200,0.05));}
+.feature-icon.f4{background:linear-gradient(135deg,rgba(185,229,95,0.2),rgba(185,229,95,0.05));}
+.feature-icon.f5{background:linear-gradient(135deg,rgba(66,163,145,0.2),rgba(66,163,145,0.05));}
+.feature-icon.f6{background:linear-gradient(135deg,rgba(153,89,182,0.2),rgba(153,89,182,0.05));}
+.feature-card h3{font-size:18px;font-weight:700;color:#fff;margin-bottom:10px;}
+.feature-card p{font-size:14px;color:var(--text2);line-height:1.65;}
+.feature-tag{display:inline-block;margin-top:14px;font-size:12px;padding:4px 10px;border-radius:20px;font-weight:600;}
+.feature-tag.lime{background:rgba(185,229,95,0.12);color:var(--lime);border:1px solid rgba(185,229,95,0.25);}
+.feature-tag.teal{background:rgba(66,163,145,0.12);color:var(--teal);border:1px solid rgba(66,163,145,0.25);}
+.feature-tag.blue{background:rgba(26,95,200,0.12);color:var(--blue2);border:1px solid rgba(26,95,200,0.25);}
+.feature-tag.purple{background:rgba(153,89,182,0.12);color:#b27de0;border:1px solid rgba(153,89,182,0.25);}
+
+/* SCREENSHOTS */
+#screenshots{background:#0d1f3c;}
+.screens-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:20px;}
+.screen-item{background:var(--card);border:1px solid var(--border);border-radius:16px;overflow:hidden;transition:transform .3s;}
+.screen-item:hover{transform:translateY(-4px);}
+.screen-img{height:220px;background:linear-gradient(145deg,#1a2e55,#0d1a30);display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;}
+.screen-img::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,transparent 60%,rgba(10,22,40,0.8) 100%);}
+.screen-label{padding:14px;font-size:13px;font-weight:600;color:var(--text2);}
+.screen-phone-mini{width:70px;border-radius:16px;background:linear-gradient(145deg,#162040,#0d1628);border:1.5px solid rgba(255,255,255,0.1);overflow:hidden;}
+.screen-phone-mini-inner{padding:6px;}
+
+/* TEAM */
+#team{background:var(--navy);}
+.team-supervisor{background:linear-gradient(135deg,rgba(185,229,95,0.08),rgba(66,163,145,0.08));border:1px solid rgba(185,229,95,0.2);border-radius:var(--radius2);padding:32px;display:flex;align-items:center;gap:28px;margin-bottom:48px;}
+.supervisor-avatar{width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg,var(--lime),var(--teal));display:flex;align-items:center;justify-content:center;font-size:28px;font-weight:800;color:#0a1628;flex-shrink:0;}
+.supervisor-info h3{font-size:22px;font-weight:800;color:#fff;margin-bottom:4px;}
+.supervisor-role{color:var(--lime);font-size:14px;font-weight:600;margin-bottom:8px;}
+.supervisor-desc{color:var(--text2);font-size:14px;}
+.team-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:24px;}
+.team-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius2);padding:28px;display:flex;align-items:center;gap:20px;transition:border-color .3s,transform .3s;}
+.team-card:hover{border-color:rgba(185,229,95,0.3);transform:translateY(-4px);}
+.member-avatar{width:64px;height:64px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:800;color:#0a1628;flex-shrink:0;}
+.av1{background:linear-gradient(135deg,var(--lime),#8fcf30);}
+.av2{background:linear-gradient(135deg,var(--teal),#2d8a7a);}
+.av3{background:linear-gradient(135deg,var(--blue2),#1a5fc8);}
+.member-info h3{font-size:17px;font-weight:700;color:#fff;margin-bottom:4px;}
+.member-id{font-size:12px;color:var(--text3);margin-bottom:8px;}
+.member-role{display:inline-block;background:rgba(185,229,95,0.1);color:var(--lime);font-size:12px;padding:3px 10px;border-radius:20px;font-weight:600;}
+.uni-badge{background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:12px;padding:20px 24px;margin-top:48px;display:flex;align-items:center;justify-content:center;gap:16px;flex-wrap:wrap;text-align:center;}
+.uni-badge-text{color:var(--text2);font-size:14px;}
+.uni-badge-text strong{color:#fff;display:block;font-size:16px;}
+
+/* TECH */
+#tech{background:#0d1f3c;}
+.tech-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px;}
+.tech-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:24px;text-align:center;}
+.tech-logo{width:56px;height:56px;border-radius:16px;margin:0 auto 14px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;letter-spacing:0.5px;color:#fff;}
+.tl-flutter{background:linear-gradient(135deg,#27b7f5,#0a7abf);}
+.tl-dart{background:linear-gradient(135deg,#00b4ab,#0175c2);}
+.tl-supabase{background:linear-gradient(135deg,#3ecf8e,#1a9a6a);}
+.tl-postgres{background:linear-gradient(135deg,#336791,#1a3d5c);}
+.tl-gemini{background:linear-gradient(135deg,#4285f4,#aa5af5);}
+.tl-realtime{background:linear-gradient(135deg,var(--lime),var(--teal));}
+.tech-card h3{font-size:15px;font-weight:700;color:#fff;margin-bottom:6px;}
+.tech-card p{font-size:13px;color:var(--text2);}
+
+/* CONTACT */
+#contact{background:var(--navy);position:relative;overflow:hidden;}
+#contact::before{content:'';position:absolute;top:-100px;right:-100px;width:400px;height:400px;background:radial-gradient(circle,rgba(66,163,145,0.12) 0%,transparent 70%);pointer-events:none;}
+.contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:start;}
+.contact-info{display:flex;flex-direction:column;gap:16px;margin-top:32px;}
+.contact-item{display:flex;align-items:center;gap:14px;padding:16px;background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:12px;}
+.contact-icon{width:42px;height:42px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
+.contact-icon.lime{background:rgba(185,229,95,0.15);color:var(--lime);}
+.contact-icon.teal{background:rgba(66,163,145,0.15);color:var(--teal);}
+.contact-icon.blue{background:rgba(26,95,200,0.15);color:var(--blue2);}
+.contact-item-text h4{font-size:13px;color:var(--text3);margin-bottom:2px;}
+.contact-item-text p{font-size:15px;color:#fff;font-weight:500;}
+.contact-form{background:var(--card);border:1px solid var(--border);border-radius:var(--radius2);padding:36px;}
+.contact-form h3{font-size:20px;font-weight:700;color:#fff;margin-bottom:24px;}
+.form-group{margin-bottom:18px;}
+.form-group label{display:block;font-size:13px;color:var(--text2);margin-bottom:8px;font-weight:500;}
+.form-group input,.form-group textarea,.form-group select{width:100%;background:rgba(255,255,255,0.05);border:1px solid var(--border);color:#fff;padding:12px 16px;border-radius:10px;font-size:15px;outline:none;transition:border-color .2s;font-family:inherit;}
+.form-group input:focus,.form-group textarea:focus{border-color:rgba(185,229,95,0.5);}
+.form-group textarea{resize:vertical;min-height:110px;}
+.form-group input::placeholder,.form-group textarea::placeholder{color:var(--text3);}
+.form-submit{width:100%;background:linear-gradient(135deg,var(--lime),var(--teal));color:#0a1628;padding:14px;border-radius:12px;font-size:16px;font-weight:700;border:none;cursor:pointer;transition:opacity .2s,transform .2s;}
+.form-submit:hover{opacity:.88;transform:translateY(-1px);}
+
+/* FOOTER */
+footer{background:#060e1a;border-top:1px solid var(--border);padding:48px 5% 28px;}
+.footer-inner{max-width:1200px;margin:auto;}
+.footer-top{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:40px;margin-bottom:40px;}
+.footer-brand p{color:var(--text2);font-size:14px;margin-top:14px;max-width:280px;}
+.footer-col h4{font-size:14px;font-weight:700;color:#fff;margin-bottom:16px;}
+.footer-col ul{list-style:none;display:flex;flex-direction:column;gap:10px;}
+.footer-col ul li a{color:var(--text2);text-decoration:none;font-size:14px;transition:color .2s;}
+.footer-col ul li a:hover{color:var(--lime);}
+.footer-bottom{border-top:1px solid var(--border);padding-top:24px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;}
+.footer-bottom p{color:var(--text3);font-size:13px;}
+.footer-links{display:flex;gap:20px;}
+.footer-links a{color:var(--text3);font-size:13px;text-decoration:none;}
+
+/* RESPONSIVE */
+@media(max-width:900px){
+  .hero-inner{grid-template-columns:1fr;text-align:center;}
+  .hero-phones{display:none;}
+  .hero-btns{justify-content:center;}
+  .hero-stats{justify-content:center;}
+  .about-grid{grid-template-columns:1fr;}
+  .contact-grid{grid-template-columns:1fr;}
+  .footer-top{grid-template-columns:1fr 1fr;}
+  .supervisor-info h3{font-size:18px;}
+}
+@media(max-width:640px){
+  nav{padding:0 4%;}
+  .nav-links,.nav-cta{display:none;}
+  .hamburger{display:flex;}
+  section{padding:70px 4%;}
+  .footer-top{grid-template-columns:1fr;}
+  .team-supervisor{flex-direction:column;text-align:center;}
+  .footer-bottom{flex-direction:column;text-align:center;}
+}
+
+/* SCROLL ANIMATIONS */
+.fade-up{opacity:0;transform:translateY(30px);transition:opacity .6s ease,transform .6s ease;}
+.fade-up.visible{opacity:1;transform:translateY(0);}
+
+/* GLOW ACCENTS */
+.glow-dot{position:absolute;border-radius:50%;filter:blur(80px);pointer-events:none;z-index:0;}
+
+/* NOTIFICATION TOAST */
+#toast{position:fixed;bottom:28px;right:28px;background:linear-gradient(135deg,var(--lime),var(--teal));color:#0a1628;padding:14px 24px;border-radius:12px;font-weight:700;font-size:14px;z-index:999;transform:translateY(100px);opacity:0;transition:.3s;}
+#toast.show{transform:translateY(0);opacity:1;}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="#home" class="logo">
+    <span class="logo-badge">SQ</span>
+    SooQna
+  </a>
+  <ul class="nav-links">
+    <li><a href="#home">Home</a></li>
+    <li><a href="#about">About</a></li>
+    <li><a href="#features">Features</a></li>
+    <li><a href="#team">Team</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <a href="#contact" class="nav-cta">Get in Touch</a>
+  <div class="hamburger" id="hamburger" onclick="toggleMenu()">
+    <span></span><span></span><span></span>
+  </div>
+</nav>
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#home" onclick="toggleMenu()">Home</a>
+  <a href="#about" onclick="toggleMenu()">About Project</a>
+  <a href="#features" onclick="toggleMenu()">Features</a>
+  <a href="#team" onclick="toggleMenu()">Team</a>
+  <a href="#contact" onclick="toggleMenu()">Contact</a>
+</div>
+
+<!-- HERO -->
+<section id="home">
+  <div class="hero-inner">
+    <div class="hero-text">
+      <div class="hero-tag">🇧🇭 Made in Bahrain · University of Bahrain</div>
+      <h1>The Smart Way to Buy & Sell <span>Electronics</span></h1>
+      <p class="hero-sub">SooQna is a secure mobile marketplace built for smart electronic devices — featuring auctions, escrow payments, AI assistance, and real-time chat.</p>
+      <div class="hero-btns">
+        <a href="#features" class="btn-primary">Explore Features →</a>
+        <a href="#about" class="btn-outline">About Project</a>
+      </div>
+      <div class="hero-stats">
+        <div class="stat-item">
+          <div class="stat-num"><span>11</span></div>
+          <div class="stat-label">Categories</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-num"><span>3</span></div>
+          <div class="stat-label">User Roles</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-num"><span>AI</span></div>
+          <div class="stat-label">Powered</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-num"><span>2</span></div>
+          <div class="stat-label">Languages</div>
+        </div>
+      </div>
+    </div>
+    <div class="hero-phones">
+      <div class="phone-frame side left">
+        <div class="phone-screen">
+          <div style="background:rgba(185,229,95,0.1);border-radius:10px;padding:10px;text-align:center;margin-bottom:8px;">
+            <div style="font-size:9px;color:var(--teal);font-weight:700;margin-bottom:4px;">🤖 AI ASSISTANT</div>
+            <div style="font-size:8px;color:var(--text2);">Tell me about "S26 Ultra"</div>
+          </div>
+          <div style="background:rgba(255,255,255,0.04);border-radius:8px;padding:8px;">
+            <div style="font-size:7px;color:var(--text2);line-height:1.5;">The S26 Ultra is listed for <strong style="color:var(--lime);">BD 800</strong>. It's a new phone with 1TB storage...</div>
+          </div>
+        </div>
+      </div>
+      <div class="phone-frame main">
+        <div class="phone-screen">
+          <div class="phone-topbar">
+            <span class="phone-logo">SooQna</span>
+            <div class="phone-bell">🔔</div>
+          </div>
+          <div class="phone-search">🔍 Search items...</div>
+          <div class="phone-banner">
+            <div style="text-align:center;">
+              <div style="font-size:14px;color:rgba(255,255,255,0.8);font-weight:700;">💻 Tech Deals</div>
+              <div style="font-size:9px;color:rgba(255,255,255,0.5);">Sponsored</div>
+            </div>
+          </div>
+          <div class="phone-cats">
+            <span class="cat-pill active">All</span>
+            <span class="cat-pill">Phones</span>
+            <span class="cat-pill">Laptops</span>
+            <span class="cat-pill">Gaming</span>
+          </div>
+          <div style="font-size:10px;color:var(--text2);margin-bottom:6px;display:flex;align-items:center;gap:4px;">⭐ Recommended</div>
+          <div class="phone-products">
+            <div class="phone-product-card">
+              <div class="phone-product-img">📱</div>
+              <div class="phone-product-info">
+                <div class="phone-product-name">S26 Ultra</div>
+                <div class="phone-product-price">BD 800</div>
+              </div>
+            </div>
+            <div class="phone-product-card">
+              <div class="phone-product-img">🖥️</div>
+              <div class="phone-product-info">
+                <div class="phone-product-name">GTX 1070</div>
+                <div class="phone-product-price">BD 50</div>
+              </div>
+            </div>
+          </div>
+          <div style="margin-top:8px;font-size:10px;color:var(--text2);display:flex;align-items:center;gap:4px;">🔨 Live Auctions</div>
+          <div style="background:linear-gradient(135deg,rgba(185,229,95,0.15),rgba(66,163,145,0.15));border:1px solid rgba(185,229,95,0.2);border-radius:8px;padding:8px;margin-top:6px;">
+            <div style="font-size:9px;font-weight:700;color:#fff;">PS6</div>
+            <div style="font-size:9px;color:var(--lime);font-weight:700;">BD 905 · ● LIVE</div>
+          </div>
+          <div class="phone-navbar">
+            <div class="phone-nav-icon active">🏠</div>
+            <div class="phone-nav-icon">💬</div>
+            <div style="width:32px;height:32px;background:var(--lime);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;">+</div>
+            <div class="phone-nav-icon">❤️</div>
+            <div class="phone-nav-icon">👤</div>
+          </div>
+        </div>
+      </div>
+      <div class="phone-frame side right">
+        <div class="phone-screen">
+          <div style="text-align:center;padding:8px 0;">
+            <div style="font-size:9px;color:var(--text3);margin-bottom:4px;">● LIVE AUCTION</div>
+            <div style="font-size:28px;margin-bottom:4px;">🎮</div>
+            <div style="font-size:10px;font-weight:700;color:#fff;">PS6</div>
+          </div>
+          <div style="background:linear-gradient(135deg,var(--lime),var(--teal));border-radius:8px;padding:8px;text-align:center;margin-bottom:8px;">
+            <div style="font-size:8px;color:#0a1628;font-weight:600;">⏱ 665:40:17 remaining</div>
+          </div>
+          <div style="background:rgba(255,255,255,0.04);border-radius:8px;padding:8px;">
+            <div style="font-size:7px;color:var(--text3);">Current Bid</div>
+            <div style="font-size:13px;font-weight:800;color:var(--lime);">BD 905.000</div>
+          </div>
+          <div style="margin-top:8px;background:linear-gradient(135deg,var(--lime),var(--teal));border-radius:8px;padding:8px;text-align:center;font-size:9px;font-weight:700;color:#0a1628;">🔨 PLACE BID</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="section-inner">
+    <div class="about-grid">
+      <div class="about-content fade-up">
+        <span class="section-tag">About Project</span>
+        <h2>Built to Solve <span>Real Problems</span> in Online Trading</h2>
+        <p class="about-text">SooQna (سوقنا — "Our Market") was born from a real frustration: people with electronics to sell, trapped on social media platforms full of scams, poor organization, and no payment security.</p>
+        <p class="about-text">Developed as a Senior Project at the University of Bahrain (ITCS498, 2025–2026), SooQna is a full-stack mobile marketplace for smart electronic devices — built with Flutter, powered by Supabase, and enhanced by Google Gemini AI.</p>
+        <div class="about-highlights">
+          <div class="highlight-item">
+            <div class="highlight-icon green">🛡️</div>
+            <div class="highlight-text">
+              <h4>Escrow Wallet System</h4>
+              <p>Payments are held safely until both buyer and seller confirm the transaction — eliminating fraud risk.</p>
+            </div>
+          </div>
+          <div class="highlight-item">
+            <div class="highlight-icon teal">🤖</div>
+            <div class="highlight-text">
+              <h4>AI-Powered Moderation</h4>
+              <p>Google Gemini Vision validates every listing image — ensuring only genuine smart devices are posted.</p>
+            </div>
+          </div>
+          <div class="highlight-item">
+            <div class="highlight-icon blue">⚡</div>
+            <div class="highlight-text">
+              <h4>Real-Time Everything</h4>
+              <p>Live auctions, instant chat, real-time notifications — all powered by Supabase Realtime channels.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="about-visual fade-up">
+        <div class="about-card">
+          <div class="about-card-header">
+            <div class="about-card-icon lime">📊</div>
+            <div>
+              <div class="about-card-title">Survey Findings</div>
+              <div class="about-card-sub">Why SooQna was needed</div>
+            </div>
+          </div>
+          <div class="stats-row">
+            <div class="mini-stat"><div class="mini-stat-num">42%</div><div class="mini-stat-label">Face scams</div></div>
+            <div class="mini-stat"><div class="mini-stat-num">23%</div><div class="mini-stat-label">Complex UI</div></div>
+            <div class="mini-stat"><div class="mini-stat-num">50%</div><div class="mini-stat-label">Use platforms</div></div>
+          </div>
+        </div>
+        <div class="about-card">
+          <div class="about-card-header">
+            <div class="about-card-icon teal">🛠️</div>
+            <div>
+              <div class="about-card-title">Tech Stack</div>
+              <div class="about-card-sub">Modern. Scalable. Cross-platform.</div>
+            </div>
+          </div>
+          <div class="tech-stack">
+            <span class="tech-badge">Flutter</span>
+            <span class="tech-badge">Dart</span>
+            <span class="tech-badge">Supabase</span>
+            <span class="tech-badge">PostgreSQL</span>
+            <span class="tech-badge">Google Gemini AI</span>
+            <span class="tech-badge">Deno Edge Functions</span>
+            <span class="tech-badge">Supabase Realtime</span>
+          </div>
+        </div>
+        <div class="about-card">
+          <div class="about-card-header">
+            <div class="about-card-icon lime">🎓</div>
+            <div>
+              <div class="about-card-title">Academic Context</div>
+              <div class="about-card-sub">ITCS498 Senior Project</div>
+            </div>
+          </div>
+          <div style="font-size:13px;color:var(--text2);line-height:1.7;">University of Bahrain · College of IT · Department of Computer Science · Academic Year 2025–2026</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section id="features">
+  <div class="section-inner">
+    <div style="text-align:center;margin-bottom:56px;" class="fade-up">
+      <span class="section-tag">Features</span>
+      <h2>Everything You Need in <span>One Platform</span></h2>
+      <p class="section-sub" style="margin:16px auto 0;">SooQna brings together the features that make online trading safe, fast, and trustworthy.</p>
+    </div>
+    <div class="features-grid">
+      <div class="feature-card fade-up">
+        <div class="feature-icon f1">🔒</div>
+        <h3>Escrow Wallet & Payments</h3>
+        <p>Funds are locked in an internal escrow wallet until both buyer and seller confirm the transaction. No payment gateway needed — fully internal and secure.</p>
+        <span class="feature-tag lime">Security</span>
+      </div>
+      <div class="feature-card fade-up">
+        <div class="feature-icon f2">🔨</div>
+        <h3>Live Auction System</h3>
+        <p>Real-time bidding with proxy auto-bid support, live countdown timers, and instant bid updates via Supabase Realtime. Winners are processed automatically.</p>
+        <span class="feature-tag teal">Real-Time</span>
+      </div>
+      <div class="feature-card fade-up">
+        <div class="feature-icon f3">🤖</div>
+        <h3>AI Assistant & Moderation</h3>
+        <p>Google Gemini AI powers two features: an intelligent marketplace assistant that answers product queries with live data, and a Vision-based image moderation system.</p>
+        <span class="feature-tag blue">AI Powered</span>
+      </div>
+      <div class="feature-card fade-up">
+        <div class="feature-icon f4">💬</div>
+        <h3>In-App Chat System</h3>
+        <p>Direct messaging between buyers and sellers with image sharing, reply threads, read receipts, and real-time delivery — all optimized with 2-query efficiency.</p>
+        <span class="feature-tag lime">Communication</span>
+      </div>
+      <div class="feature-card fade-up">
+        <div class="feature-icon f5">🔍</div>
+        <h3>Smart Search & Categories</h3>
+        <p>11 electronics categories (Phones, Laptops, Tablets, Gaming, Audio, Cameras, TVs, Smart Home, and more) with filters, condition sorting, and price ranges.</p>
+        <span class="feature-tag teal">Discovery</span>
+      </div>
+      <div class="feature-card fade-up">
+        <div class="feature-icon f6">⭐</div>
+        <h3>Ratings, Reviews & Trust</h3>
+        <p>Post-transaction rating system with automated average updates, report & complaint management, user follow system, and an Admin dashboard for oversight.</p>
+        <span class="feature-tag purple">Trust</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- APP SCREENSHOTS SECTION -->
+<section id="screenshots" style="padding:80px 5%;">
+  <div class="section-inner">
+    <div style="text-align:center;margin-bottom:48px;" class="fade-up">
+      <span class="section-tag">App Screenshots</span>
+      <h2>See <span>SooQna</span> in Action</h2>
+    </div>
+    <div class="screens-grid">
+      <div class="screen-item fade-up">
+        <div class="screen-img">
+          <div style="text-align:center;z-index:1;position:relative;">
+            <div style="font-size:36px;margin-bottom:6px;">🏠</div>
+            <div style="font-size:12px;color:var(--lime);font-weight:600;">Home Feed</div>
+          </div>
+        </div>
+        <div class="screen-label">Home & Browse</div>
+      </div>
+      <div class="screen-item fade-up">
+        <div class="screen-img">
+          <div style="text-align:center;z-index:1;position:relative;">
+            <div style="font-size:36px;margin-bottom:6px;">🔨</div>
+            <div style="font-size:12px;color:var(--lime);font-weight:600;">Live Auction</div>
+          </div>
+        </div>
+        <div class="screen-label">Live Auctions</div>
+      </div>
+      <div class="screen-item fade-up">
+        <div class="screen-img">
+          <div style="text-align:center;z-index:1;position:relative;">
+            <div style="font-size:36px;margin-bottom:6px;">💬</div>
+            <div style="font-size:12px;color:var(--teal);font-weight:600;">Chat Screen</div>
+          </div>
+        </div>
+        <div class="screen-label">In-App Chat</div>
+      </div>
+      <div class="screen-item fade-up">
+        <div class="screen-img">
+          <div style="text-align:center;z-index:1;position:relative;">
+            <div style="font-size:36px;margin-bottom:6px;">🤖</div>
+            <div style="font-size:12px;color:var(--teal);font-weight:600;">AI Assistant</div>
+          </div>
+        </div>
+        <div class="screen-label">AI Assistant</div>
+      </div>
+      <div class="screen-item fade-up">
+        <div class="screen-img">
+          <div style="text-align:center;z-index:1;position:relative;">
+            <div style="font-size:36px;margin-bottom:6px;">👤</div>
+            <div style="font-size:12px;color:var(--lime);font-weight:600;">Profile</div>
+          </div>
+        </div>
+        <div class="screen-label">User Profile</div>
+      </div>
+      <div class="screen-item fade-up">
+        <div class="screen-img">
+          <div style="text-align:center;z-index:1;position:relative;">
+            <div style="font-size:36px;margin-bottom:6px;">🛡️</div>
+            <div style="font-size:12px;color:var(--lime);font-weight:600;">Admin Panel</div>
+          </div>
+        </div>
+        <div class="screen-label">Admin Dashboard</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TECH STACK -->
+<section id="tech">
+  <div class="section-inner">
+    <div style="text-align:center;margin-bottom:48px;" class="fade-up">
+      <span class="section-tag">Technology</span>
+      <h2>Built With <span>Modern Tools</span></h2>
+    </div>
+    <div class="tech-grid">
+      <div class="tech-card fade-up">
+        <div class="tech-logo tl-flutter">Flutter</div>
+        <h3>Flutter</h3>
+        <p>Cross-platform mobile development for Android & iOS from a single codebase</p>
+      </div>
+      <div class="tech-card fade-up">
+        <div class="tech-logo tl-dart">Dart</div>
+        <h3>Dart</h3>
+        <p>Primary programming language — fast, type-safe, and optimized for UI</p>
+      </div>
+      <div class="tech-card fade-up">
+        <div class="tech-logo tl-supabase">SB</div>
+        <h3>Supabase</h3>
+        <p>Backend-as-a-Service providing database, auth, storage, and real-time features</p>
+      </div>
+      <div class="tech-card fade-up">
+        <div class="tech-logo tl-postgres">PG</div>
+        <h3>PostgreSQL</h3>
+        <p>Relational database with RPC functions for atomic wallet and auction operations</p>
+      </div>
+      <div class="tech-card fade-up">
+        <div class="tech-logo tl-gemini">AI</div>
+        <h3>Google Gemini</h3>
+        <p>AI assistant (gemini-2.0-flash) for product queries and image moderation via Edge Functions</p>
+      </div>
+      <div class="tech-card fade-up">
+        <div class="tech-logo tl-realtime" style="color:#0a1628;">RT</div>
+        <h3>Supabase Realtime</h3>
+        <p>Live auction bidding, instant chat delivery, and real-time notification badges</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TEAM -->
+<section id="team">
+  <div class="section-inner">
+    <div style="margin-bottom:48px;" class="fade-up">
+      <span class="section-tag">Team</span>
+      <h2>Meet the <span>Developers</span></h2>
+      <p class="section-sub">A passionate team from the University of Bahrain, College of Information Technology.</p>
+    </div>
+    <div class="team-supervisor fade-up">
+      <div class="supervisor-avatar">DrA</div>
+      <div class="supervisor-info">
+        <h3>Dr. AbdulFattah Mahmood Abdulrazzaq Salman</h3>
+        <div class="supervisor-role">🎓 Project Supervisor</div>
+        <div class="supervisor-desc">Faculty member at the Department of Computer Science, University of Bahrain. Guided the team through the entire project lifecycle — from requirement collection through implementation and testing.</div>
+      </div>
+    </div>
+    <div class="team-grid">
+      <div class="team-card fade-up">
+        <div class="member-avatar av1">MG</div>
+        <div class="member-info">
+          <h3>Mahdi Mohammed Ghuloom Haji</h3>
+          <div class="member-id">ID: 202104612</div>
+          <span class="member-role">Full-Stack Developer</span>
+        </div>
+      </div>
+      <div class="team-card fade-up">
+        <div class="member-avatar av2">HS</div>
+        <div class="member-info">
+          <h3>Hussain Ali Abdulhussain Shughul</h3>
+          <div class="member-id">ID: 202202587</div>
+          <span class="member-role">Full-Stack Developer</span>
+        </div>
+      </div>
+      <div class="team-card fade-up">
+        <div class="member-avatar av3">AA</div>
+        <div class="member-info">
+          <h3>Abdulaziz Abdulhadi Mohamed Alsakran</h3>
+          <div class="member-id">ID: 202105928</div>
+          <span class="member-role">Full-Stack Developer</span>
+        </div>
+      </div>
+    </div>
+    <div class="uni-badge fade-up">
+      <span style="font-size:32px;">🏛️</span>
+      <div class="uni-badge-text">
+        <strong>University of Bahrain</strong>
+        College of Information Technology · Department of Computer Science · ITCS498 Senior Project · 2025–2026
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="section-inner">
+    <div class="contact-grid">
+      <div class="fade-up">
+        <span class="section-tag">Contact</span>
+        <h2>Get in <span>Touch</span></h2>
+        <p style="color:var(--text2);font-size:16px;margin-bottom:32px;">Interested in SooQna? Want to learn more about the project? We'd love to hear from you.</p>
+        <div class="contact-info">
+          <div class="contact-item">
+            <div class="contact-icon lime">🏛️</div>
+            <div class="contact-item-text">
+              <h4>Institution</h4>
+              <p>University of Bahrain — College of IT</p>
+            </div>
+          </div>
+          <div class="contact-item">
+            <div class="contact-icon teal">📚</div>
+            <div class="contact-item-text">
+              <h4>Course</h4>
+              <p>ITCS498 — Senior Project</p>
+            </div>
+          </div>
+          <div class="contact-item">
+            <div class="contact-icon blue">📅</div>
+            <div class="contact-item-text">
+              <h4>Submission Date</h4>
+              <p>May 2026</p>
+            </div>
+          </div>
+          <div class="contact-item">
+            <div class="contact-icon lime">🇧🇭</div>
+            <div class="contact-item-text">
+              <h4>Location</h4>
+              <p>Kingdom of Bahrain</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="contact-form fade-up">
+        <h3>💬 Send a Message</h3>
+        <div class="form-group">
+          <label>Your Name</label>
+          <input type="text" id="f-name" placeholder="e.g. Ahmed Al-Khalifa"/>
+        </div>
+        <div class="form-group">
+          <label>Email Address</label>
+          <input type="email" id="f-email" placeholder="you@example.com"/>
+        </div>
+        <div class="form-group">
+          <label>Subject</label>
+          <input type="text" id="f-subject" placeholder="e.g. Collaboration inquiry"/>
+        </div>
+        <div class="form-group">
+          <label>Message</label>
+          <textarea id="f-message" placeholder="Tell us what you'd like to know about SooQna..."></textarea>
+        </div>
+        <button class="form-submit" onclick="submitForm()">Send Message 🚀</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <a href="#home" class="logo" style="text-decoration:none;">
+          <span class="logo-badge">SQ</span>
+          <span style="color:#fff;font-size:20px;font-weight:700;">SooQna</span>
+        </a>
+        <p>A smart, secure, and AI-powered marketplace for electronic devices. Built by students at the University of Bahrain.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Navigate</h4>
+        <ul>
+          <li><a href="#home">Home</a></li>
+          <li><a href="#about">About Project</a></li>
+          <li><a href="#features">Features</a></li>
+          <li><a href="#team">Team</a></li>
+          <li><a href="#contact">Contact</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Features</h4>
+        <ul>
+          <li><a href="#features">Escrow Wallet</a></li>
+          <li><a href="#features">Live Auctions</a></li>
+          <li><a href="#features">AI Assistant</a></li>
+          <li><a href="#features">In-App Chat</a></li>
+          <li><a href="#features">Admin Panel</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Tech Stack</h4>
+        <ul>
+          <li><a href="#tech">Flutter</a></li>
+          <li><a href="#tech">Supabase</a></li>
+          <li><a href="#tech">PostgreSQL</a></li>
+          <li><a href="#tech">Google Gemini AI</a></li>
+          <li><a href="#tech">Supabase Realtime</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2026 SooQna · University of Bahrain Senior Project · ITCS498</p>
+      <div class="footer-links">
+        <a href="#about">About</a>
+        <a href="#team">Team</a>
+        <a href="#contact">Contact</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<div id="toast">✅ Message sent! We'll get back to you soon.</div>
+
+<script>
+function toggleMenu(){
+  document.getElementById('mobileMenu').classList.toggle('open');
+}
+
+function submitForm(){
+  const n=document.getElementById('f-name').value;
+  const e=document.getElementById('f-email').value;
+  const m=document.getElementById('f-message').value;
+  if(!n||!e||!m){alert('Please fill in your name, email, and message.');return;}
+  const t=document.getElementById('toast');
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),3500);
+  document.getElementById('f-name').value='';
+  document.getElementById('f-email').value='';
+  document.getElementById('f-subject').value='';
+  document.getElementById('f-message').value='';
+}
+
+const obs=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){e.target.classList.add('visible');}
+  });
+},{threshold:0.1,rootMargin:'0px 0px -40px 0px'});
+document.querySelectorAll('.fade-up').forEach(el=>obs.observe(el));
+
+document.querySelectorAll('a[href^="#"]').forEach(a=>{
+  a.addEventListener('click',e=>{
+    const t=document.querySelector(a.getAttribute('href'));
+    if(t){e.preventDefault();t.scrollIntoView({behavior:'smooth'});}
+  });
+});
+</script>
+</body>
+</html>
